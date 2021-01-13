@@ -100,7 +100,7 @@ def into_course(courseList):
     for i in range(len(module_list)):
         # 每个课件
         module = module_list[i]
-        # php开篇id
+        # 课件id
         module_id = module['id']
         # 目录
         module_name = module['name']
@@ -228,23 +228,18 @@ def get_view_directory(courseOpenId, openClassId, cellId, module_id):
     res = session.post(view_directory_url, params=params, verify=False)
     time.sleep(1)
     if res.json()['code'] == -100 or res.json()['code'] == '-100':
+        # 这里可能就是请求太多了
+        # 过段时间就可以使用了  一二十分钟 
         print('文件信息获取错误！')
         print('等待几分钟后尝试...')
         exit()
         
-    #     get_acw_tc()
-    #     get_code()
-    #     userId, schoolId, token = login()
-    #     courseList = get_course_list()
-    #     choose(courseList)
-    #     into_course(courseList)
-
     return res.json()
 
 def add_view_content(courseOpenId, openClassId, cellId, cellName):
     url = 'https://zjy2.icve.com.cn/api/common/Directory/addCellActivity'
     print('文件：' + cellName + '---评论开始......(每篇需要数分钟！！！)')
-    print('Reason 由于服务器的限制！！！')
+    print('Reason 由于PC端服务器的限制！！！')
     data1 = {
         'courseOpenId': courseOpenId,
         'openClassId': openClassId,
@@ -298,13 +293,21 @@ def add_view_content(courseOpenId, openClassId, cellId, cellName):
     print('Success ' + cellName + '-'*10+'增加..评论..问答..笔记..纠错..已完成'+ '-'*10)
 
 def video(courseOpenId, openClassId, cellId, cellLogId, stuStudyNewlyTime, audioVideoLong):
+    '''
+        刷视频
+        通过抓包分析, 网页观看视频就是隔断时间对这个地址发送请求
+        studyNewlyTime就是当前视频播放的进度数
+        我设置的是15秒发送一次请求
+        Notice：
+            发送间隔为15秒, 所以当前视频播放的进度数与上次发送的进度数相减<15, 不然嗝屁, 会封该课件--也没多久
+    '''
     url = 'https://zjy2.icve.com.cn/api/common/Directory/stuProcessCellLog'
 
-    forNum = int((audioVideoLong - stuStudyNewlyTime) / 14)
+    forNum = int((audioVideoLong - stuStudyNewlyTime) / 14) # 循环次数 总视频长度-观看过后的长度分14段 每段循环后会加14点几
     for i in range(forNum):
-        addPercent = round(stuStudyNewlyTime-1 + (random.random() + 14)*i, 6)
+        addPercent = round(stuStudyNewlyTime-1 + (random.random() + 14)*i, 6) # 保存6为小数,  减1是因为打开网页, 网页视频播放会倒退1秒(抓包了解), 尽量真实嘛
 
-        if addPercent >= audioVideoLong:
+        if addPercent >= audioVideoLong: # 怕超过视频总长度, 不晓得会出啥事, 所以可能视频进度可能都是99.9999999%
             o = audioVideoLong
         else:
             o = addPercent
@@ -330,6 +333,13 @@ def video(courseOpenId, openClassId, cellId, cellLogId, stuStudyNewlyTime, audio
         time.sleep(15)
 
 def ppt(courseOpenId, openClassId, cellId, cellLogId, pageCount):
+    '''
+        刷ppt
+        通过抓包分析, 网页观看视频就是隔断时间对这个地址发送请求
+        为什么我要循环呢
+        因为我发现每次发个请求, (/viewDirectory)地址返回数据中有个时间会增加10
+        我猜是学习课件时间
+    '''
     url = 'https://zjy2.icve.com.cn/api/common/Directory/stuProcessCellLog'
     num = random.randint(3, 6)
     o = pageCount - num + 1
@@ -343,7 +353,7 @@ def ppt(courseOpenId, openClassId, cellId, cellLogId, pageCount):
         'picNum': o+i,
         'studyNewlyTime': '0',
         'studyNewlyPicNum': o+i
-        # 'token': 'snpfaawszaln6vasxhjzg'
+        # 'token': ''
         }
 
         res = session.post(url, params=params, verify=False).json()
