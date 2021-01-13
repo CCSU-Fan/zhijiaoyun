@@ -5,7 +5,7 @@ import urllib3
 import time
 
 urllib3.disable_warnings()
-
+print('请先在main.py中 login函数输入对应账号密码！！！亲')
 url = 'https://zjy2.icve.com.cn/portal/login.html'
 
 login_url = 'https://zjy2.icve.com.cn/api/common/login/login'
