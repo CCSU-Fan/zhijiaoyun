@@ -151,6 +151,7 @@ def into_course(courseList):
                     print('视频进度---' + str(cellPercent))
                     print('开始！！！')
                     video(courseOpenId, openClassId, cellId, cellLogId,stuStudyNewlyTime, audioVideoLong)
+                    add_view_content(courseOpenId, openClassId, cellId, cellName)
 
                 elif categoryName == 'ppt' or  categoryName == '文档':
                     # 进入播放页面
