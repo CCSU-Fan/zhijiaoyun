@@ -42,9 +42,9 @@ ex:
 
 
 #### 思路
-1. get_acw_tc函数           获取headers中acw_tc参数
-2. get_code函数             获取验证码图片(只能请求一次, 否则失效), 并获取headers中verifycode参数
-3. login函数                登录 后去返回json数据.但好像都没用到, 会给headers设置auth参数
+1. get_acw_tc函数           会给headers中cookie设置acw_tc参
+2. get_code函数             获取验证码图片(只能请求一次, 否则失效), 会给headers中cookie设置verifycode参数
+3. login函数                登录 后去返回json数据.但好像都没用到, 会给headers中cookie设置auth参数
 4. get_course_list函数      获取你的课程 ex：数学 语文
 5. choose函数               选择你要刷的课程
 6. into_course函数          进入课程(特乱, 不高兴)里面调用很多方法, 实现的刷课功能都在里面写了
