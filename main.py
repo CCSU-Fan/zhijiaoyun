@@ -110,7 +110,7 @@ def into_course(courseList):
         # 如果目录进度100% 跳过
         if str(module_percent) == '100.0':
             print(module_name + '  该目录进度100%  跳过')
-            time.sleep(2)
+            time.sleep(5)
             continue
         
         # 子目录列表
@@ -145,9 +145,9 @@ def into_course(courseList):
                     res = get_view_directory(courseOpenId, openClassId, cellId, module_id)
                     cellLogId = res['cellLogId']
                     cellLogId = 'test'
-                    audioVideoLong = res[audioVideoLong]
-                    stuStudyNewlyTime = res.json()['stuStudyNewlyTime']
-                    cellPercent = res.json()['cellPercent']
+                    audioVideoLong = res['audioVideoLong']
+                    stuStudyNewlyTime = res['stuStudyNewlyTime']
+                    cellPercent = res['cellPercent']
                     print('视频进度---' + str(cellPercent))
                     print('开始！！！')
                     video(courseOpenId, openClassId, cellId, cellLogId,stuStudyNewlyTime, audioVideoLong)
